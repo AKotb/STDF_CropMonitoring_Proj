@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
 	private String PYTHON_INTERPRETER = "C:/Users/akotb/AppData/Local/Programs/Python/Python39/python.exe";
-	private String PYTHON_SCRIPT = "C:/Users/akotb/eclipse-workspace/STDF_CropMonitoring_Proj/src/main/resources/test.py";
+	private String PYTHON_SCRIPT = "C:/Users/akotb/git/STDF_CropMonitoring_Proj/src/main/resources/try_20-4-2021.py";
 	
 	@GetMapping("/")
 	public String userForm(Locale locale, Model model) {
-		return "home";
+		return "index";
 	}
 
 	@GetMapping("/ndvi")
@@ -49,7 +49,7 @@ public class HomeController {
 				if (line == null) {
 					break;
 				}
-				model.addAttribute("line", line);
+				model.addAttribute("imagesrc", line);
 			}
 			System.out.println("=================== After Python Call=================================");
 		} catch (Exception e) {

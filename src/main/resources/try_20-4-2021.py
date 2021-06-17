@@ -89,3 +89,6 @@ import matplotlib.pyplot as plt
 
 plt.imshow(image)
 plt.show()
+#plt.plot()
+#plt.savefig('C:/Program Files/apache-tomcat-8.5.64/stdf_generated_output_files/saved_figure.png')
+print('NDVI Image Generated!')

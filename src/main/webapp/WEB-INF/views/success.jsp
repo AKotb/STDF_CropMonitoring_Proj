@@ -9,7 +9,9 @@
 <body>
 	<fieldset>
 		<legend>Python Call Result</legend>
-		<h2>${line}</h2>
+		<h1>${imagesrc}</h1>
+		<!-- <img src = "http://localhost:8080/stdf_generated_output_files/${imagesrc}"
+      alt = "Learn HTML5" height = "250" width = "270" /> -->
 	</fieldset>
 </body>
 </html>
