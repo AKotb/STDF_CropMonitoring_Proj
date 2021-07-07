@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UserController {
 
-	@Autowired
+	/*@Autowired
 	private UserService userService;
 
 	@GetMapping("/manageusers")
@@ -43,5 +43,5 @@ public class UserController {
 		}
 		userService.save(user);
 		return "redirect:/manageusers";
-	}
+	}*/
 }

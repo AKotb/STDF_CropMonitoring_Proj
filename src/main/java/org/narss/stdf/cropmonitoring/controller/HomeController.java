@@ -10,6 +10,12 @@ import java.util.Locale;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * @author akotb
@@ -19,8 +25,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-	private String PYTHON_INTERPRETER = "C:/Users/akotb/AppData/Local/Programs/Python/Python39/python.exe";
-	private String PYTHON_SCRIPT = "C:/Users/akotb/git/STDF_CropMonitoring_Proj/src/main/resources/try_20-4-2021.py";
+	private String PYTHON_INTERPRETER = "C:/Python39/python.exe";
+	private String PYTHON_SCRIPT = "C:/Users/Sayed/git/STDF_CropMonitoring_Proj/src/main/resources/try_20-4-2021.py";
 	
 	@GetMapping("/")
 	public String userForm(Locale locale, Model model) {
@@ -28,14 +34,17 @@ public class HomeController {
 	}
 
 	@GetMapping("/ndvi")
-	public String ndviExcute(Locale locale, Model model) {
-		System.out.println("=================== Before Python Call=================================");
+	public String ndviExcute(@ModelAttribute("polygonCoordinates") String polygonCoordinates, Locale locale, Model model) {
+		//int ID = Integer.parseInt(id);
 		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			JsonElement je = JsonParser.parseString(polygonCoordinates);
+			String polygonCoordinatesJson = gson.toJson(je);
 			// Creating the python command.
-			String command = PYTHON_INTERPRETER + " " + PYTHON_SCRIPT;
+			String command = PYTHON_INTERPRETER + " " + PYTHON_SCRIPT + " " + gson.toJsonTree(je);
 
 			System.out.println("Python Command: " + command);
-
+			
 			// Executing the python command.
 			ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command);
 			builder.redirectErrorStream(true);

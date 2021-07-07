@@ -1,19 +1,33 @@
 import ee
 import numpy as np
 import time
+import sys
+import json
 #from osgeo import gdal
 #from osgeo import osr
 
 
 # init the ee object
+# ee.Initialize()
+
+# Parse the arguments sent from request
+args = (sys.argv)
+polygonCoordinates = args[1]
+polygonCoordinates = eval(polygonCoordinates)
+
+# init the ee object
 ee.Initialize()
 
 # Define the roi
+'''
 area = ee.Geometry.Polygon([[105.4084512289977, 12.960956032145036], \
                             [105.46544280614614, 12.960956032145036], \
                             [105.46544280614614, 13.006454200439705], \
                             [105.4084512289977, 13.006454200439705], \
                             [105.4084512289977, 12.960956032145036]])
+'''
+
+area = ee.Geometry.Polygon(polygonCoordinates)
 
 # define the image
 collection = ee.ImageCollection("COPERNICUS/S2").filterBounds(area) \
@@ -43,6 +57,18 @@ def LatLonImg(img):
     lats = np.array((ee.Array(img.get("latitude")).getInfo()))
     lons = np.array((ee.Array(img.get("longitude")).getInfo()))
     return lats, lons, data
+
+# export ndvi statistics( as min, max, & avg)
+def get_ndvi_stats(img):
+    img = img.addBands(ee.Image.pixelLonLat())
+
+    img = img.reduceRegion(reducer=ee.Reducer.toList(), \
+                           geometry=area, \
+                           maxPixels=1e13, \
+                           scale=10);
+
+    data = np.array((ee.Array(img.get("result")).getInfo()))
+    return np.min(data), np.max(data), np.mean(data)
 
 
 # covert the lat, lon and array into an image
@@ -75,6 +101,8 @@ def toImage(lats, lons, data):
 # map over the image collection
 myCollection = collection.map(anyFunction)
 
+abc = myCollection.toList(collection.size().getInfo(), 0)
+print("------------", type(abc.get(5)))
 # get the median
 result = ee.Image(myCollection.median()).rename(['result'])
 
@@ -83,7 +111,7 @@ lat, lon, data = LatLonImg(result)
 
 # 1d to 2d array
 image = toImage(lat, lon, data)
-
+print('type:::: ', image.shape)
 # in case you want to plot the image
 import matplotlib.pyplot as plt
 
